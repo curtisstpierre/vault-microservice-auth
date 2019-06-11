@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
-//	"crypto/subtle"
-    "net/http"
-    "io/ioutil"
+	"encoding/json"
+	//	"crypto/subtle"
 	"errors"
+	"io/ioutil"
 	"log"
+	"net/http"
+	"net/url"
 	"os"
 	"time"
 
@@ -78,21 +80,19 @@ func Backend(c *logical.BackendConfig) *backend {
 	return &b
 }
 
-
-
 func (b *backend) pathAuthLogin(_ context.Context, req *logical.Request, d *framework.FieldData) (*logical.Response, error) {
 	// password := d.Get("password").(string)
 
-    /* Ignore passwords for now
+	/* Ignore passwords for now
 	if subtle.ConstantTimeCompare([]byte(password), []byte("super-secret-password")) != 1 {
 		return nil, logical.ErrPermissionDenied
 	}
 	*/
 	resp, err := http.PostForm("http://localhost:8000/token", url.Values{
-	    "grant_type": {"client_credentials"},
-	    "client_id":{"foo"},
-	    "client_secret":{"bar"},
-	    "scope":{"read"}
+		"grant_type":    {"client_credentials"},
+		"client_id":     {"foo"},
+		"client_secret": {"bar"},
+		"scope":         {"read"},
 	})
 	if err != nil {
 		return nil, err
